@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 10:39:44 by truello           #+#    #+#             */
-/*   Updated: 2024/02/27 16:37:46 by truello          ###   ########.fr       */
+/*   Updated: 2024/02/29 12:09:02 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_atoi(const char *str)
 			minus_count = 1;
 		i++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	while (ft_isdigit(str[i]))
 	{
 		r = r * 10 + (str[i] - '0');
 		i++;
