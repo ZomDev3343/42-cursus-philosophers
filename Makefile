@@ -1,9 +1,9 @@
-SRC=philo/main.c \
-	philo/ft_atoi.c \
-	time.c
+SRC=./philo/main.c \
+	./philo/time.c \
+	./philo/utils.c
 OBJ=${SRC:.c=.o}
-NAME=philo
-BONUS_NAME=philo_bonus
+NAME=philosopher
+BONUS_NAME=philosopher_bonus
 FLAGS=-Wall -Werror -Wextra
 
 all: $(NAME)
@@ -12,7 +12,7 @@ all: $(NAME)
 	cc -c $(FLAGS) -g $< -o $@
 
 $(NAME): $(OBJ)
-	cc $(FLAGS) $(LIBS) -g -o $(NAME)
+	cc $(FLAGS) $(OBJ) -g -o $(NAME)
 
 clean:
 	rm -rf *.o

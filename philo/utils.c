@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 10:39:44 by truello           #+#    #+#             */
-/*   Updated: 2024/02/29 12:09:02 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/01 19:13:44 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_atoi(const char *str)
 			minus_count = 1;
 		i++;
 	}
-	while (ft_isdigit(str[i]))
+	while (str[i] >= '0' && str[i] <= '9')
 	{
 		r = r * 10 + (str[i] - '0');
 		i++;
@@ -37,4 +37,35 @@ int	ft_atoi(const char *str)
 	if (minus_count == 1)
 		r *= -1;
 	return ((int) r);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	*ft_calloc(size_t size, size_t count)
+{
+	void	*res;
+
+	res = malloc(size * count);
+	if (!res)
+		return (NULL);
+	memset(res, 0, size * count);
+	return (res);
+}
+
+void	ft_free(void *to_free)
+{
+	if (to_free)
+		free(to_free);
 }
