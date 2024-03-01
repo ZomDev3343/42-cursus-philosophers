@@ -1,32 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   philo_struct.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 12:29:21 by truello          ###   ########.fr       */
+/*   Created: 2024/03/01 12:29:42 by truello           #+#    #+#             */
+/*   Updated: 2024/03/01 12:46:20 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#ifndef PHILO_STRUCT_H
+# define PHILO_STRUCT_H
 
-static int	check_args(int ac, char **av)
+enum e_philo_state
 {
+	TAKEN_FORK,
+	EATING,
+	THINKING,
+	SLEEPING,
+	DEAD
+};
 
-}
-
-static void	init_philo()
+typedef struct s_philo
 {
+	long long	last_meal_time;
+	long long	sleep_start_time;
+}	t_philo;
 
-}
-
-int	main(int ac, char **av)
+typedef struct s_vars
 {
-	if (ac >= 5 && ac <= 6)
-		init_philo();
-	else
-		printf(PHILO_USAGE);
-	return (0);
-}
+	int	philo_amt;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	must_eat_times;
+
+}	t_vars;
+
+#endif
