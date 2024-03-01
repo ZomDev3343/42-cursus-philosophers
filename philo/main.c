@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 19:11:04 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/01 19:15:22 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	free_vars(t_vars *vars)
 
 static int	check_args(int ac, char **av)
 {
-int	i;
+	int	i;
 	int	n;
 
 	i = -1;
@@ -52,9 +52,9 @@ static int	setup_vars(t_vars **vars, int ac, char **av)
 
 static void	init_philo(int ac, char **av)
 {
-t_vars	*vars;
+	t_vars	*vars;
 
-if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
+	if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
 		return (printf("Initialization error!\n"), (void) 0);
 }
 
@@ -63,7 +63,7 @@ int	main(int ac, char **av)
 	if (ac >= 5 && ac <= 6)
 		init_philo(ac, av);
 	else
-		printf("Usage : <philo_amount> <time_to_die> <time_to_eat>\
-			<time_to_sleep> [amount_of_philo_eating]");
+		printf("Usage : ./philosopher <philo_amount> <time_to_die> <time_to_eat> \
+<time_to_sleep> [amount_of_philo_eating]\n");
 	return (0);
 }
