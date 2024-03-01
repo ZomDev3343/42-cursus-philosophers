@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 19:15:22 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/01 19:22:58 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void	free_vars(t_vars *vars)
 {
 	free(vars->philos);
+	free(vars->threads);
+	free(vars);
 }
 
 static int	check_args(int ac, char **av)
@@ -22,11 +24,11 @@ static int	check_args(int ac, char **av)
 	int	i;
 	int	n;
 
-	i = -1;
+	i = 0;
 	while (++i < ac)
 	{
 		n = ft_atoi(av[i]);
-		if (!ft_strcmp(av[ac], "0") && n == 0)
+		if (!ft_strcmp(av[i], "0") && n == 0)
 			return (FALSE);
 	}
 	return (TRUE);
@@ -42,7 +44,7 @@ static int	setup_vars(t_vars **vars, int ac, char **av)
 	(*vars)->time_to_eat = ft_atoi(av[3]);
 	(*vars)->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		(*vars)->philo_amt = ft_atoi(av[5]);
+		(*vars)->must_eat_times = ft_atoi(av[5]);
 	(*vars)->philos = ft_calloc(sizeof(t_philo), (*vars)->philo_amt);
 	(*vars)->threads = ft_calloc(sizeof(pthread_t), (*vars)->philo_amt);
 	if (!(*vars)->philos || !(*vars)->threads)
@@ -56,6 +58,7 @@ static void	init_philo(int ac, char **av)
 
 	if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
 		return (printf("Initialization error!\n"), (void) 0);
+	free_vars(vars);
 }
 
 int	main(int ac, char **av)
