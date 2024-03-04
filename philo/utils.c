@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 10:39:44 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 19:13:44 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/04 12:05:43 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,13 @@ void	ft_free(void *to_free)
 {
 	if (to_free)
 		free(to_free);
+}
+
+void	free_vars(t_vars *vars)
+{
+	ft_free(vars->philos);
+	ft_free(vars->threads);
+	ft_free(vars->infos);
+	ft_free(vars->forks);
+	ft_free(vars);
 }

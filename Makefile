@@ -1,6 +1,8 @@
 SRC=./philo/main.c \
 	./philo/time.c \
-	./philo/utils.c
+	./philo/utils.c \
+	./philo/control.c \
+	./philo/manager.c
 OBJ=${SRC:.c=.o}
 NAME=philosopher
 BONUS_NAME=philosopher_bonus

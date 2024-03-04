@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 19:22:58 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/04 15:29:54 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	free_vars(t_vars *vars)
-{
-	free(vars->philos);
-	free(vars->threads);
-	free(vars);
-}
 
 static int	check_args(int ac, char **av)
 {
@@ -34,37 +27,62 @@ static int	check_args(int ac, char **av)
 	return (TRUE);
 }
 
+static void	init_vars(t_vars *vars)
+{
+	int			i;
+
+	i = -1;
+	while (++i < vars->infos->philo_amt)
+	{
+		vars->philos[i].id = i + 1;
+		vars->philos[i].last_meal_time = -1;
+		vars->philos[i].state = THINKING;
+		vars->philos[i].infos = vars->infos;
+		vars->philos[i].forks = vars->forks;
+		MTX_INIT(vars->forks + i, NULL);
+		THD_CREATE(vars->threads + i, NULL, &routine, vars->philos + i);
+	}
+	THD_CREATE(vars->threads + i, NULL, &manager_loop, vars);
+}
+
 static int	setup_vars(t_vars **vars, int ac, char **av)
 {
 	*vars = (t_vars *) ft_calloc(sizeof(t_vars), 1);
 	if (!*vars)
 		return (FALSE);
-	(*vars)->philo_amt = ft_atoi(av[1]);
-	(*vars)->time_to_die = ft_atoi(av[2]);
-	(*vars)->time_to_eat = ft_atoi(av[3]);
-	(*vars)->time_to_sleep = ft_atoi(av[4]);
+	(*vars)->infos = ft_calloc(sizeof(t_infos), 1);
+	if (!(*vars)->infos)
+		return (free(vars), FALSE);
+	(*vars)->infos->philo_amt = ft_atoi(av[1]);
+	(*vars)->infos->time_to_die = ft_atoi(av[2]);
+	(*vars)->infos->time_to_eat = ft_atoi(av[3]);
+	(*vars)->infos->time_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		(*vars)->must_eat_times = ft_atoi(av[5]);
-	(*vars)->philos = ft_calloc(sizeof(t_philo), (*vars)->philo_amt);
-	(*vars)->threads = ft_calloc(sizeof(pthread_t), (*vars)->philo_amt);
-	if (!(*vars)->philos || !(*vars)->threads)
-		return (ft_free((*vars)->philos), ft_free((*vars)->threads), FALSE);
+		(*vars)->infos->must_eat_times = ft_atoi(av[5]);
+	(*vars)->philos = ft_calloc(sizeof(t_philo), (*vars)->infos->philo_amt);
+	(*vars)->forks = ft_calloc(sizeof(pthread_mutex_t),
+			(*vars)->infos->philo_amt);
+	(*vars)->threads = ft_calloc(sizeof(pthread_t),
+			(*vars)->infos->philo_amt + 1);
+	if (!(*vars)->philos || !(*vars)->threads || !(*vars)->forks)
+		return (free_vars(*vars), FALSE);
 	return (TRUE);
 }
 
-static void	init_philo(int ac, char **av)
+static void	start_philo(int ac, char **av)
 {
 	t_vars	*vars;
 
 	if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
 		return (printf("Initialization error!\n"), (void) 0);
+	init_vars(vars);
 	free_vars(vars);
 }
 
 int	main(int ac, char **av)
 {
 	if (ac >= 5 && ac <= 6)
-		init_philo(ac, av);
+		start_philo(ac, av);
 	else
 		printf("Usage : ./philosopher <philo_amount> <time_to_die> <time_to_eat> \
 <time_to_sleep> [amount_of_philo_eating]\n");

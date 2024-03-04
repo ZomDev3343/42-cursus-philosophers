@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:11:29 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 19:12:11 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/04 15:34:56 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,34 @@
 # define TRUE 1
 # define FALSE 0
 
-# define PHILO_TAKEN_FORK "%ld %d has taken a fork\n"
-# define PHILO_EATING "%ld %d is eating\n"
-# define PHILO_SLEEPING "%ld %d is sleeping\n"
-# define PHILO_THINKING "%ld %d is thinking\n"
-# define PHILO_DEAD "%ld %d is dead\n"
+# define THD_CREATE pthread_create
+# define THD_DETACH pthread_detach
+
+# define MTX_INIT pthread_mutex_init
+# define MTX_LOCK pthread_mutex_lock
+# define MTX_UNLOCK pthread_mutex_unlock
+
+/* Utils */
 
 int			ft_atoi(const char *str);
 int			ft_strcmp(char *s1, char *s2);
 void		*ft_calloc(size_t size, size_t count);
 void		ft_free(void *to_free);
+void		free_vars(t_vars *vars);
+
+/* Philosophers Control */
+
+void		*routine(void *buf);
+void		change_state(t_philo *philo, enum e_philo_state newstate);
+void		take_fork(t_philo *philo);
+int			is_one_philo_dead(t_philo *philosophers, int amount);
+
+/* Manager */
+
+void		*manager_loop(void *buf);
+
+/* Time */
+
 long long	timestamp(void);
 
 #endif

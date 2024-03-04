@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_struct.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:29:42 by truello           #+#    #+#             */
-/*   Updated: 2024/03/01 19:11:49 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/04 15:04:39 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,25 @@ enum e_philo_state
 	DEAD
 };
 
+typedef struct s_infos
+{
+	int			philo_amt;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			must_eat_times;
+}	t_infos;
+
 typedef struct s_philo
 {
-	long long	last_meal_time;
-	long long	sleep_start_time;
+	int					id;
+	long long			last_meal_time;
+	long long			sleep_start_time;
+	enum e_philo_state	state;
+	int					must_stop;
+	int					times_eaten;
+	t_infos				*infos;
+	pthread_mutex_t		*forks;
 }	t_philo;
 
 /**
@@ -33,13 +48,10 @@ typedef struct s_philo
 */
 typedef struct s_vars
 {
-	int			philo_amt;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	int			must_eat_times;
-	pthread_t	*threads;
-	t_philo		*philos;
+	pthread_mutex_t	*forks;
+	t_infos			*infos;
+	t_philo			*philos;
+	pthread_t		*threads;
 }	t_vars;
 
 #endif
