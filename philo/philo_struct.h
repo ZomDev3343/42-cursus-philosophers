@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:29:42 by truello           #+#    #+#             */
-/*   Updated: 2024/03/04 15:04:39 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 13:44:19 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ typedef struct s_infos
 
 typedef struct s_philo
 {
+	pthread_mutex_t		*forks;
 	int					id;
+	t_infos				*infos;
 	long long			last_meal_time;
+	int					must_stop;
 	long long			sleep_start_time;
 	enum e_philo_state	state;
-	int					must_stop;
 	int					times_eaten;
-	t_infos				*infos;
-	pthread_mutex_t		*forks;
 }	t_philo;
 
 /**

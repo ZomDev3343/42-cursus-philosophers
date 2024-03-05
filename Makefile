@@ -2,6 +2,7 @@ SRC=./philo/main.c \
 	./philo/time.c \
 	./philo/utils.c \
 	./philo/control.c \
+	./philo/control_2.c \
 	./philo/manager.c
 OBJ=${SRC:.c=.o}
 NAME=philosopher

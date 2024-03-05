@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 13:31:50 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 15:06:25 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ void	*routine(void *buf)
 	philo = (t_philo *) buf;
 	if (philo->last_meal_time == -1)
 		philo->last_meal_time = timestamp();
+	while (!philo->must_stop
+		|| (philo->infos->must_eat_times > 0
+			&& philo->times_eaten < philo->infos->must_eat_times))
+	{
+		philo_take_fork(philo);
+	}
 	return (NULL);
 }
 
@@ -42,25 +48,48 @@ void	change_state(t_philo *philo, enum e_philo_state newstate)
 		printf("%lld %d is dead\n", ts, philo->id);
 }
 
-void	take_fork(t_philo *philo)
+void	philo_take_fork(t_philo *philo)
 {
 	MTX_LOCK(philo->forks + (philo->id - 1));
+	if (philo->must_stop)
+		return (MTX_UNLOCK(philo->forks + (philo->id - 1)), (void) 0);
 	if (philo->infos->philo_amt > 1)
 	{
-		if (philo->id == philo->infos->philo_amt)
-			MTX_LOCK(philo->forks);
-		else
-			MTX_LOCK(philo->forks + philo->id);
+		MTX_LOCK(philo->forks
+			+ (philo->id * (philo->id != philo->infos->philo_amt)));
+		if (philo->must_stop)
+			return (MTX_UNLOCK(philo->forks
+					+ (philo->id * (philo->id != philo->infos->philo_amt))),
+				(void) 0);
+
 	}
+	change_state(philo, TAKEN_FORK);
 }
 
-int	is_one_philo_dead(t_philo *philosophers, int amount)
+static void	put_fork(t_philo *philo)
 {
-	while (amount-- >= 0)
-	{
-		if ((int)(timestamp() - philosophers[amount].last_meal_time)
-			> philosophers->infos->time_to_die)
-			return (TRUE);
-	}
-	return (FALSE);
+	MTX_UNLOCK(philo->forks + (philo->id - 1));
+	if (philo->infos->philo_amt > 1)
+		MTX_UNLOCK(philo->forks
+			+ (philo->id * (philo->id != philo->infos->philo_amt)));
 }
+
+void	philo_eat(t_philo *philo)
+{
+	long long	start_eating_time;
+
+	start_eating_time = timestamp();
+	if (philo->must_stop)
+		return ;
+	change_state(philo, EATING);
+	while (timestamp() - start_eating_time <= philo->infos->time_to_eat)
+		;
+	philo->last_meal_time = timestamp();
+	philo->times_eaten++;
+	put_fork(philo);
+	if (philo->must_stop)
+		return ;
+	philo_sleep(philo);
+}
+
+

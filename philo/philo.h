@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:11:29 by truello           #+#    #+#             */
-/*   Updated: 2024/03/04 15:34:56 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 14:35:01 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 # define THD_CREATE pthread_create
 # define THD_DETACH pthread_detach
+# define THD_JOIN pthread_join
 
 # define MTX_INIT pthread_mutex_init
 # define MTX_LOCK pthread_mutex_lock
@@ -43,12 +44,15 @@ void		free_vars(t_vars *vars);
 
 void		*routine(void *buf);
 void		change_state(t_philo *philo, enum e_philo_state newstate);
-void		take_fork(t_philo *philo);
-int			is_one_philo_dead(t_philo *philosophers, int amount);
+void		philo_take_fork(t_philo *philo);
+void		philo_eat(t_philo *philo);
+void		philo_sleep(t_philo *philo);
+int			is_philo_dead(t_philo *philo);
 
 /* Manager */
 
 void		*manager_loop(void *buf);
+t_philo		*is_one_philo_dead(t_philo *philosophers, int amount);
 
 /* Time */
 

@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/04 15:29:54 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 15:18:47 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static void	init_vars(t_vars *vars)
 	int			i;
 
 	i = -1;
+	THD_CREATE(vars->threads + vars->infos->philo_amt, NULL,
+		&manager_loop, vars);
 	while (++i < vars->infos->philo_amt)
 	{
 		vars->philos[i].id = i + 1;
@@ -42,7 +44,6 @@ static void	init_vars(t_vars *vars)
 		MTX_INIT(vars->forks + i, NULL);
 		THD_CREATE(vars->threads + i, NULL, &routine, vars->philos + i);
 	}
-	THD_CREATE(vars->threads + i, NULL, &manager_loop, vars);
 }
 
 static int	setup_vars(t_vars **vars, int ac, char **av)
@@ -72,15 +73,20 @@ static int	setup_vars(t_vars **vars, int ac, char **av)
 static void	start_philo(int ac, char **av)
 {
 	t_vars	*vars;
+	int		i;
 
 	if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
 		return (printf("Initialization error!\n"), (void) 0);
+	i = -1;
 	init_vars(vars);
+	while (++i < vars->infos->philo_amt)
+		THD_JOIN(vars->threads[i], NULL);
 	free_vars(vars);
 }
 
 int	main(int ac, char **av)
 {
+	printf("%ld\n", sizeof(long));
 	if (ac >= 5 && ac <= 6)
 		start_philo(ac, av);
 	else
