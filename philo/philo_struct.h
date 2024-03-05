@@ -6,13 +6,14 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:29:42 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:13:04 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 00:15:32 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_STRUCT_H
 # define PHILO_STRUCT_H
 
+/* Every steps a philosphers follows during the sim. */
 enum e_philo_state
 {
 	TAKEN_FORK,
@@ -22,29 +23,50 @@ enum e_philo_state
 	DEAD
 };
 
+/**
+ * @param must_eat_times How many times does philo. has to eat [0-~] 0=no limit
+ * @param philo_amt How many philosophers
+ * @param time_to_die How long (in ms) to die
+ * @param time_to_eat How long (in ms) to finish eating
+ * @param time_to_sleep How long (in ms) to wake up after sleeping
+*/
 typedef struct s_infos
 {
+	int			must_eat_times;
 	int			philo_amt;
 	int			time_to_die;
 	int			time_to_eat;
 	int			time_to_sleep;
-	int			must_eat_times;
 }	t_infos;
 
+/**
+ * @param forks Mutex list representing the forks
+ * @param id Number representing the philosopher [1-~]
+ * @param infos Contains all the infos given at the start
+ * @param last_meal_time Timestamp of philosopher's last meal
+ * @param must_stop Does any philosophers died, or stopping condition fulfilled
+ * @param philos_mtx Mutexes to avoid data races when modifing philosophers
+ * @param state Current state (e.g enum s_infos)
+ * @param times_eaten How many times the philo. ate
+*/
 typedef struct s_philo
 {
 	pthread_mutex_t		*forks;
-	pthread_mutex_t		*philos_mtx;
 	int					id;
 	t_infos				*infos;
 	struct timeval		last_meal_time;
 	int					must_stop;
+	pthread_mutex_t		*philos_mtx;
 	enum e_philo_state	state;
 	int					times_eaten;
 }	t_philo;
 
 /**
- * @param philo_amt Number of philosophers around the table
+ * @param forks Mutex list representing the forks
+ * @param infos Contains all the infos given at the start
+ * @param philos Every philosophers in the simulation
+ * @param philos_mtx Mutexes to avoid data races when modifing philosophers
+ * @param threads All the threads linked to philosophers
 */
 typedef struct s_vars
 {
