@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_struct.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:29:42 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 15:31:02 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:13:04 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ typedef struct s_infos
 typedef struct s_philo
 {
 	pthread_mutex_t		*forks;
+	pthread_mutex_t		*philos_mtx;
 	int					id;
 	t_infos				*infos;
 	struct timeval		last_meal_time;
 	int					must_stop;
-	struct timeval		sleep_start_time;
 	enum e_philo_state	state;
 	int					times_eaten;
 }	t_philo;
@@ -51,6 +51,7 @@ typedef struct s_vars
 	pthread_mutex_t	*forks;
 	t_infos			*infos;
 	t_philo			*philos;
+	pthread_mutex_t	*philos_mtx;
 	pthread_t		*threads;
 }	t_vars;
 

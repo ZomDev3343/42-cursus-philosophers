@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 16:22:24 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:24:27 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ static void	init_vars(t_vars *vars)
 
 	i = -1;
 	while (++i < vars->infos->philo_amt)
+	{
 		MTX_INIT(vars->forks + i, NULL);
+		MTX_INIT(vars->philos_mtx + i, NULL);
+	}
 	i = -1;
 	while (++i < vars->infos->philo_amt)
 	{
@@ -41,6 +44,7 @@ static void	init_vars(t_vars *vars)
 		vars->philos[i].state = THINKING;
 		vars->philos[i].infos = vars->infos;
 		vars->philos[i].forks = vars->forks;
+		vars->philos[i].philos_mtx = vars->philos_mtx;
 		THD_CREATE(vars->threads + i, NULL, &routine, vars->philos + i);
 	}
 	THD_CREATE(vars->threads + vars->infos->philo_amt, NULL,
@@ -64,9 +68,12 @@ static int	setup_vars(t_vars **vars, int ac, char **av)
 	(*vars)->philos = ft_calloc(sizeof(t_philo), (*vars)->infos->philo_amt);
 	(*vars)->forks = ft_calloc(sizeof(pthread_mutex_t),
 			(*vars)->infos->philo_amt);
+	(*vars)->philos_mtx = ft_calloc(sizeof(pthread_mutex_t),
+			(*vars)->infos->philo_amt);
 	(*vars)->threads = ft_calloc(sizeof(pthread_t),
 			(*vars)->infos->philo_amt + 1);
-	if (!(*vars)->philos || !(*vars)->threads || !(*vars)->forks)
+	if (!(*vars)->philos || !(*vars)->threads || !(*vars)->forks
+		|| !(*vars)->philos_mtx)
 		return (free_vars(*vars), FALSE);
 	return (TRUE);
 }

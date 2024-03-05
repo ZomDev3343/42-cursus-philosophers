@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 10:39:44 by truello           #+#    #+#             */
-/*   Updated: 2024/03/04 12:05:43 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:22:42 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,6 @@ void	free_vars(t_vars *vars)
 	ft_free(vars->threads);
 	ft_free(vars->infos);
 	ft_free(vars->forks);
+	ft_free(vars->philos_mtx);
 	ft_free(vars);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manager.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 15:01:20 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 16:24:01 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:30:08 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ void	*manager_loop(void *buf)
 		{
 			change_state(dead, DEAD);
 			while (++i < vars->infos->philo_amt)
+			{
+				MTX_LOCK(vars->philos_mtx + i);
 				vars->philos->must_stop = TRUE;
+				MTX_UNLOCK(vars->philos_mtx + i);
+			}
 			loop = FALSE;
 		}
 	}

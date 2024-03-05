@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 16:25:37 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:12:21 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	*routine(void *buf)
 
 	philo = (t_philo *) buf;
 	if (philo->last_meal_time.tv_sec == 0)
+	{
+		MTX_LOCK(philo->philos_mtx + philo->id - 1);
 		philo->last_meal_time = timestamp();
+		MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
+	}
 	while (!philo->must_stop
 		|| (philo->infos->must_eat_times > 0
 			&& philo->times_eaten < philo->infos->must_eat_times))
@@ -35,17 +39,20 @@ void	change_state(t_philo *philo, enum e_philo_state newstate)
 	if (philo->state == newstate)
 		return ;
 	ts = timestamp();
+	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->state = newstate;
+	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	if (newstate == TAKEN_FORK)
-		printf("%ld%d %d has taken a fork\n", ts.tv_sec, ts.tv_usec, philo->id);
+		printf("%ld%ld %d has taken a fork\n",
+			ts.tv_sec, ts.tv_usec, philo->id);
 	else if (newstate == EATING)
-		printf("%ld%d %d is eating\n", ts.tv_sec, ts.tv_usec, philo->id);
+		printf("%ld%ld %d is eating\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else if (newstate == SLEEPING)
-		printf("%ld%d %d is sleeping\n", ts.tv_sec, ts.tv_usec, philo->id);
+		printf("%ld%ld %d is sleeping\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else if (newstate == THINKING)
-		printf("%ld%d %d is thinking\n", ts.tv_sec, ts.tv_usec, philo->id);
+		printf("%ld%ld %d is thinking\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else
-		printf("%ld%d %d is dead\n", ts.tv_sec, ts.tv_usec, philo->id);
+		printf("%ld%ld %d died\n", ts.tv_sec, ts.tv_usec, philo->id);
 }
 
 void	philo_take_fork(t_philo *philo)
@@ -82,12 +89,16 @@ void	philo_eat(t_philo *philo)
 	if (philo->must_stop)
 		return ;
 	change_state(philo, EATING);
+	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->last_meal_time = timestamp();
+	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	while (get_time_diff(timestamp(), start_eating_time)
 		<= philo->infos->time_to_eat)
 		;
+	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->last_meal_time = timestamp();
 	philo->times_eaten++;
+	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	put_fork(philo);
 	if (philo->must_stop)
 		return ;
