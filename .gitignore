@@ -1,3 +1,5 @@
 philosopher
 .vscode
 *.o
+test.c
+test.o

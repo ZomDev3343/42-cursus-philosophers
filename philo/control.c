@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 15:06:25 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 16:25:37 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*routine(void *buf)
 	t_philo	*philo;
 
 	philo = (t_philo *) buf;
-	if (philo->last_meal_time == -1)
+	if (philo->last_meal_time.tv_sec == 0)
 		philo->last_meal_time = timestamp();
 	while (!philo->must_stop
 		|| (philo->infos->must_eat_times > 0
@@ -30,22 +30,22 @@ void	*routine(void *buf)
 
 void	change_state(t_philo *philo, enum e_philo_state newstate)
 {
-	long long	ts;
+	struct timeval	ts;
 
 	if (philo->state == newstate)
 		return ;
 	ts = timestamp();
 	philo->state = newstate;
 	if (newstate == TAKEN_FORK)
-		printf("%lld %d has taken a fork\n", ts, philo->id);
+		printf("%ld%d %d has taken a fork\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else if (newstate == EATING)
-		printf("%lld %d is eating\n", ts, philo->id);
+		printf("%ld%d %d is eating\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else if (newstate == SLEEPING)
-		printf("%lld %d is sleeping\n", ts, philo->id);
+		printf("%ld%d %d is sleeping\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else if (newstate == THINKING)
-		printf("%lld %d is thinking\n", ts, philo->id);
+		printf("%ld%d %d is thinking\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else
-		printf("%lld %d is dead\n", ts, philo->id);
+		printf("%ld%d %d is dead\n", ts.tv_sec, ts.tv_usec, philo->id);
 }
 
 void	philo_take_fork(t_philo *philo)
@@ -61,9 +61,9 @@ void	philo_take_fork(t_philo *philo)
 			return (MTX_UNLOCK(philo->forks
 					+ (philo->id * (philo->id != philo->infos->philo_amt))),
 				(void) 0);
-
 	}
 	change_state(philo, TAKEN_FORK);
+	philo_eat(philo);
 }
 
 static void	put_fork(t_philo *philo)
@@ -76,13 +76,15 @@ static void	put_fork(t_philo *philo)
 
 void	philo_eat(t_philo *philo)
 {
-	long long	start_eating_time;
+	struct timeval	start_eating_time;
 
 	start_eating_time = timestamp();
 	if (philo->must_stop)
 		return ;
 	change_state(philo, EATING);
-	while (timestamp() - start_eating_time <= philo->infos->time_to_eat)
+	philo->last_meal_time = timestamp();
+	while (get_time_diff(timestamp(), start_eating_time)
+		<= philo->infos->time_to_eat)
 		;
 	philo->last_meal_time = timestamp();
 	philo->times_eaten++;
@@ -91,5 +93,3 @@ void	philo_eat(t_philo *philo)
 		return ;
 	philo_sleep(philo);
 }
-
-

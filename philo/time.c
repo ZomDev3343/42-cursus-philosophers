@@ -6,16 +6,25 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:38:32 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 15:07:10 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 16:23:32 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	timestamp(void)
+struct timeval	timestamp(void)
 {
 	struct timeval	tval;
 
 	gettimeofday(&tval, NULL);
-	return (tval.tv_usec);
+	return (tval);
+}
+
+int	get_time_diff(struct timeval from, struct timeval to)
+{
+	long long	diff;
+
+	diff = (from.tv_sec - to.tv_sec) * 1000;
+	diff += (from.tv_usec - to.tv_usec) / 1000;
+	return (diff);
 }

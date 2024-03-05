@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 15:18:47 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 16:22:24 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,19 @@ static void	init_vars(t_vars *vars)
 	int			i;
 
 	i = -1;
-	THD_CREATE(vars->threads + vars->infos->philo_amt, NULL,
-		&manager_loop, vars);
+	while (++i < vars->infos->philo_amt)
+		MTX_INIT(vars->forks + i, NULL);
+	i = -1;
 	while (++i < vars->infos->philo_amt)
 	{
 		vars->philos[i].id = i + 1;
-		vars->philos[i].last_meal_time = -1;
 		vars->philos[i].state = THINKING;
 		vars->philos[i].infos = vars->infos;
 		vars->philos[i].forks = vars->forks;
-		MTX_INIT(vars->forks + i, NULL);
 		THD_CREATE(vars->threads + i, NULL, &routine, vars->philos + i);
 	}
+	THD_CREATE(vars->threads + vars->infos->philo_amt, NULL,
+		&manager_loop, vars);
 }
 
 static int	setup_vars(t_vars **vars, int ac, char **av)
@@ -86,7 +87,7 @@ static void	start_philo(int ac, char **av)
 
 int	main(int ac, char **av)
 {
-	printf("%ld\n", sizeof(long));
+	printf("%ld\n", sizeof(long long int));
 	if (ac >= 5 && ac <= 6)
 		start_philo(ac, av);
 	else

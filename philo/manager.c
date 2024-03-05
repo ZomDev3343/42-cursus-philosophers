@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 15:01:20 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 15:00:58 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 16:24:01 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 t_philo	*is_one_philo_dead(t_philo *philosophers, int amount)
 {
+	int	time_diff;
+
+	time_diff = get_time_diff(timestamp(),
+			philosophers[amount - 1].last_meal_time);
 	while (amount-- >= 0)
 	{
-		if ((int)(timestamp() - philosophers[amount].last_meal_time)
-			> philosophers->infos->time_to_die)
+		if (time_diff > philosophers->infos->time_to_die)
 			return (philosophers + amount);
 	}
 	return (NULL);
@@ -36,7 +39,7 @@ void	*manager_loop(void *buf)
 	{
 		i = -1;
 		dead = is_one_philo_dead(vars->philos, vars->infos->philo_amt);
-		if (dead && dead->last_meal_time > -1)
+		if (dead)
 		{
 			change_state(dead, DEAD);
 			while (++i < vars->infos->philo_amt)
