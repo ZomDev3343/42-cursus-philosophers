@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 15:01:20 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:30:08 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/05 23:36:17 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	*manager_loop(void *buf)
 			while (++i < vars->infos->philo_amt)
 			{
 				MTX_LOCK(vars->philos_mtx + i);
-				vars->philos->must_stop = TRUE;
+				vars->philos[i].must_stop = TRUE;
 				MTX_UNLOCK(vars->philos_mtx + i);
 			}
 			loop = FALSE;

@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:24:27 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/05 23:58:55 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,18 @@ static void	start_philo(int ac, char **av)
 	t_vars	*vars;
 	int		i;
 
+	i = -1;
 	if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
 		return (printf("Initialization error!\n"), (void) 0);
-	i = -1;
 	init_vars(vars);
-	while (++i < vars->infos->philo_amt)
+	while (++i < vars->infos->philo_amt + 1)
 		THD_JOIN(vars->threads[i], NULL);
+	i = -1;
+	while (++i < vars->infos->philo_amt)
+	{
+		MTX_DESTROY(vars->forks + i);
+		MTX_DESTROY(vars->philos_mtx + i);
+	}
 	free_vars(vars);
 }
 

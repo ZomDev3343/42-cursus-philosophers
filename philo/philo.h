@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:11:29 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 16:17:33 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/05 23:44:36 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define MTX_INIT pthread_mutex_init
 # define MTX_LOCK pthread_mutex_lock
 # define MTX_UNLOCK pthread_mutex_unlock
+# define MTX_DESTROY pthread_mutex_destroy
 
 /* Utils */
 

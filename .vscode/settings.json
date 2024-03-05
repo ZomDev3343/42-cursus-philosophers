@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"philo.h": "c",
-		"philo_struct.h": "c"
+		"philo_struct.h": "c",
+		"stdio.h": "c",
+		"string.h": "c"
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:12:21 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/05 23:57:08 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	change_state(t_philo *philo, enum e_philo_state newstate)
 	else if (newstate == THINKING)
 		printf("%ld%ld %d is thinking\n", ts.tv_sec, ts.tv_usec, philo->id);
 	else
-		printf("%ld%ld %d died\n", ts.tv_sec, ts.tv_usec, philo->id);
+		printf("%ld%03ld %d died\n", ts.tv_sec, ts.tv_usec, philo->id);
 }
 
 void	philo_take_fork(t_philo *philo)
@@ -87,7 +87,10 @@ void	philo_eat(t_philo *philo)
 
 	start_eating_time = timestamp();
 	if (philo->must_stop)
-		return ;
+		return (MTX_UNLOCK(philo->forks + (philo->id - 1)),
+			MTX_UNLOCK(philo->forks
+				+ (philo->id * (philo->id != philo->infos->philo_amt))),
+			(void) 0);
 	change_state(philo, EATING);
 	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->last_meal_time = timestamp();
