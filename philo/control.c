@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/06 17:57:23 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 18:06:45 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,6 @@ void	philo_eat(t_philo *philo)
 	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->last_meal_time = timestamp();
 	philo->times_eaten++;
-	if (philo->times_eaten >= philo->infos->must_eat_times
-		&& philo->infos->must_eat_times > 0)
-		philo->must_stop = TRUE;
 	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	put_fork(philo);
 	if (philo->must_stop)
