@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:58:55 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 17:25:20 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ static void	start_philo(int ac, char **av)
 
 int	main(int ac, char **av)
 {
-	printf("%ld\n", sizeof(long long int));
 	if (ac >= 5 && ac <= 6)
 		start_philo(ac, av);
 	else

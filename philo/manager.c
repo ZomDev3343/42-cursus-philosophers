@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 15:01:20 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:36:17 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 17:24:38 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,45 @@ t_philo	*is_one_philo_dead(t_philo *philosophers, int amount)
 {
 	int	time_diff;
 
+	if (philosophers[amount - 1].last_meal_time.tv_sec == 0)
+		return (NULL);
 	time_diff = get_time_diff(timestamp(),
 			philosophers[amount - 1].last_meal_time);
 	while (amount-- >= 0)
-	{
-		if (time_diff > philosophers->infos->time_to_die)
+		if (time_diff > philosophers->infos->time_to_die
+			&& philosophers[amount - 1].state != EATING)
 			return (philosophers + amount);
-	}
 	return (NULL);
+}
+
+static int	do_philos_ate_enough(t_philo *philo)
+{
+	int	i;
+
+	i = -1;
+	if (philo->infos->must_eat_times == 0)
+		return (FALSE);
+	while (++i < philo->infos->philo_amt)
+		if (philo[i].times_eaten < philo->infos->must_eat_times)
+			return (FALSE);
+	return (TRUE);
+}
+
+static void	stop_philos(t_vars *vars)
+{
+	int	i;
+
+	i = -1;
+	while (++i < vars->infos->philo_amt)
+	{
+		MTX_LOCK(vars->philos_mtx + i);
+		vars->philos[i].must_stop = TRUE;
+		MTX_UNLOCK(vars->philos_mtx + i);
+	}
 }
 
 void	*manager_loop(void *buf)
 {
-	int		i;
 	int		loop;
 	t_vars	*vars;
 	t_philo	*dead;
@@ -37,17 +63,16 @@ void	*manager_loop(void *buf)
 	vars = (t_vars *) buf;
 	while (loop)
 	{
-		i = -1;
 		dead = is_one_philo_dead(vars->philos, vars->infos->philo_amt);
 		if (dead)
 		{
 			change_state(dead, DEAD);
-			while (++i < vars->infos->philo_amt)
-			{
-				MTX_LOCK(vars->philos_mtx + i);
-				vars->philos[i].must_stop = TRUE;
-				MTX_UNLOCK(vars->philos_mtx + i);
-			}
+			stop_philos(vars);
+			loop = FALSE;
+		}
+		if (do_philos_ate_enough(vars->philos))
+		{
+			stop_philos(vars);
 			loop = FALSE;
 		}
 	}

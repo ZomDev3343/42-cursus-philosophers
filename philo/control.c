@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:57:08 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 17:18:38 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,8 @@ void	*routine(void *buf)
 		philo->last_meal_time = timestamp();
 		MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	}
-	while (!philo->must_stop
-		|| (philo->infos->must_eat_times > 0
-			&& philo->times_eaten < philo->infos->must_eat_times))
-	{
+	while (!philo->must_stop)
 		philo_take_fork(philo);
-	}
 	return (NULL);
 }
 
@@ -83,24 +79,21 @@ static void	put_fork(t_philo *philo)
 
 void	philo_eat(t_philo *philo)
 {
-	struct timeval	start_eating_time;
-
-	start_eating_time = timestamp();
 	if (philo->must_stop)
 		return (MTX_UNLOCK(philo->forks + (philo->id - 1)),
-			MTX_UNLOCK(philo->forks
-				+ (philo->id * (philo->id != philo->infos->philo_amt))),
-			(void) 0);
+			MTX_UNLOCK(philo->forks + (philo->id
+					* (philo->id != philo->infos->philo_amt))), (void) 0);
 	change_state(philo, EATING);
 	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->last_meal_time = timestamp();
 	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
-	while (get_time_diff(timestamp(), start_eating_time)
-		<= philo->infos->time_to_eat)
-		;
+	usleep(philo->infos->time_to_eat * 1000);
 	MTX_LOCK(philo->philos_mtx + philo->id - 1);
 	philo->last_meal_time = timestamp();
 	philo->times_eaten++;
+	if (philo->times_eaten >= philo->infos->must_eat_times
+		&& philo->infos->must_eat_times > 0)
+		philo->must_stop = TRUE;
 	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	put_fork(philo);
 	if (philo->must_stop)

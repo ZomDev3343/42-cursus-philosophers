@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/05 13:56:23 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 23:21:51 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 17:17:16 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,10 @@
 
 void	philo_sleep(t_philo *philo)
 {
-	struct timeval	sleep_start_time;
-
 	if (philo->must_stop)
 		return ;
 	change_state(philo, SLEEPING);
-	sleep_start_time = timestamp();
-	while (get_time_diff(timestamp(), sleep_start_time)
-		<= philo->infos->time_to_sleep)
-		;
+	usleep(philo->infos->time_to_sleep * 1000);
 	if (philo->must_stop)
 		return ;
 	change_state(philo, THINKING);
