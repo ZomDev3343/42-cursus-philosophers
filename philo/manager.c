@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 15:01:20 by truello           #+#    #+#             */
-/*   Updated: 2024/03/06 17:34:22 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/06 17:36:11 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@ t_philo	*is_one_philo_dead(t_philo *philosophers, int amount)
 {
 	int	time_diff;
 
-	time_diff = get_time_diff(timestamp(),
-			philosophers[amount - 1].last_meal_time);
 	while (--amount >= 0)
+	{
+		time_diff = get_time_diff(timestamp(),
+				philosophers[amount].last_meal_time);
 		if (time_diff > philosophers->infos->time_to_die
 			&& philosophers[amount].state != EATING
 			&& philosophers[amount].last_meal_time.tv_sec > 0)
 			return (philosophers + amount);
+	}
 	return (NULL);
 }
 
