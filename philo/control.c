@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   control.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/06 18:06:45 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 11:44:01 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,19 @@ void	change_state(t_philo *philo, enum e_philo_state newstate)
 	philo->state = newstate;
 	MTX_UNLOCK(philo->philos_mtx + philo->id - 1);
 	if (newstate == TAKEN_FORK)
-		printf("%ld%03ld %d has taken a fork\n",
+		printf("%ld%03d %d has taken a fork\n",
 			ts.tv_sec, ts.tv_usec / 1000, philo->id);
 	else if (newstate == EATING)
-		printf("%ld%03ld %d is eating\n", ts.tv_sec,
+		printf("%ld%03d %d is eating\n", ts.tv_sec,
 			ts.tv_usec / 1000, philo->id);
 	else if (newstate == SLEEPING)
-		printf("%ld%03ld %d is sleeping\n",
+		printf("%ld%03d %d is sleeping\n",
 			ts.tv_sec, ts.tv_usec / 1000, philo->id);
 	else if (newstate == THINKING)
-		printf("%ld%03ld %d is thinking\n",
+		printf("%ld%03d %d is thinking\n",
 			ts.tv_sec, ts.tv_usec / 1000, philo->id);
 	else
-		printf("%ld%03ld %d died\n", ts.tv_sec, ts.tv_usec / 1000, philo->id);
+		printf("%ld%03d %d died\n", ts.tv_sec, ts.tv_usec / 1000, philo->id);
 }
 
 void	philo_take_fork(t_philo *philo)
