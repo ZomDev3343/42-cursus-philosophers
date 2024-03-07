@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:11:29 by truello           #+#    #+#             */
-/*   Updated: 2024/03/06 00:15:39 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 14:55:13 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 /* Utils */
 
 int				ft_atoi(const char *str);
-int				ft_strcmp(char *s1, char *s2);
 void			*ft_calloc(size_t size, size_t count);
 void			ft_free(void *to_free);
 void			free_vars(t_vars *vars);
