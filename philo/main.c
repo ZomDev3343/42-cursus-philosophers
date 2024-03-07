@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/07 14:05:13 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 14:11:07 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ static void	start_philo(int ac, char **av)
 	while (++i < vars->infos->philo_amt + 1)
 		THD_JOIN(vars->threads[i], NULL);
 	i = -1;
-	/*while (++i < vars->infos->philo_amt)
+	while (++i < vars->infos->philo_amt)
 	{
 		MTX_DESTROY(vars->forks + i);
 		MTX_DESTROY(vars->philos_mtx + i);
-	}*/
+	}
 	free_vars(vars);
 }
 

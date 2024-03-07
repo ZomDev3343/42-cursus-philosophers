@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/07 13:55:02 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 14:10:41 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*routine(void *buf)
 	t_philo	*philo;
 
 	philo = (t_philo *) buf;
-	MTX_LOCK(philo->philos_mtx + philo->id - 1);
+	MTX_LOCK(philo->philos_mtx + (philo->id - 1));
 	if (philo->last_meal_time.tv_sec == 0)
 		philo->last_meal_time = timestamp();
 	while (!philo->must_stop)
@@ -73,6 +73,7 @@ void	philo_take_fork(t_philo *philo)
 			return (MTX_UNLOCK(philo->philos_mtx + (philo->id - 1)),
 				MTX_UNLOCK(philo->forks
 					+ (philo->id * (philo->id != philo->infos->philo_amt))),
+				MTX_UNLOCK(philo->forks + (philo->id - 1)),
 				(void) 0);
 		MTX_UNLOCK(philo->philos_mtx + (philo->id - 1));
 	}
