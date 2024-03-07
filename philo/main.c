@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/07 14:11:07 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 14:16:51 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static void	init_vars(t_vars *vars)
 		MTX_INIT(vars->forks + i, NULL);
 		MTX_INIT(vars->philos_mtx + i, NULL);
 	}
+	MTX_INIT(vars->philos_mtx + i, NULL);
 	i = -1;
 	while (++i < vars->infos->philo_amt)
 	{
@@ -69,7 +70,7 @@ static int	setup_vars(t_vars **vars, int ac, char **av)
 	(*vars)->forks = ft_calloc(sizeof(pthread_mutex_t),
 			(*vars)->infos->philo_amt);
 	(*vars)->philos_mtx = ft_calloc(sizeof(pthread_mutex_t),
-			(*vars)->infos->philo_amt);
+			(*vars)->infos->philo_amt + 1);
 	(*vars)->threads = ft_calloc(sizeof(pthread_t),
 			(*vars)->infos->philo_amt + 1);
 	if (!(*vars)->philos || !(*vars)->threads || !(*vars)->forks
@@ -95,6 +96,7 @@ static void	start_philo(int ac, char **av)
 		MTX_DESTROY(vars->forks + i);
 		MTX_DESTROY(vars->philos_mtx + i);
 	}
+	MTX_DESTROY(vars->philos_mtx + i);
 	free_vars(vars);
 }
 

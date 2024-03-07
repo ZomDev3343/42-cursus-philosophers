@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 12:10:50 by truello           #+#    #+#             */
-/*   Updated: 2024/03/07 14:10:41 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 14:17:40 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	change_state(t_philo *philo, enum e_philo_state newstate)
 	philo->state = newstate;
 	philo_id = philo->id;
 	MTX_UNLOCK(philo->philos_mtx + (philo->id - 1));
+	MTX_LOCK(philo->philos_mtx + philo->infos->philo_amt);
 	if (newstate == TAKEN_FORK)
 		printf("%ld%03ld %d has taken a fork\n",
 			ts.tv_sec, ts.tv_usec / 1000, philo_id);
@@ -54,6 +55,7 @@ void	change_state(t_philo *philo, enum e_philo_state newstate)
 			ts.tv_sec, ts.tv_usec / 1000, philo_id);
 	else
 		printf("%ld%03ld %d died\n", ts.tv_sec, ts.tv_usec / 1000, philo_id);
+	MTX_UNLOCK(philo->philos_mtx + philo->infos->philo_amt);
 }
 
 void	philo_take_fork(t_philo *philo)
