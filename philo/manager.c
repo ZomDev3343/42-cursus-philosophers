@@ -6,7 +6,7 @@
 /*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 15:01:20 by truello           #+#    #+#             */
-/*   Updated: 2024/03/06 17:36:11 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 13:24:23 by tohma            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@ t_philo	*is_one_philo_dead(t_philo *philosophers, int amount)
 
 	while (--amount >= 0)
 	{
+		MTX_LOCK(philosophers->philos_mtx + amount);
 		time_diff = get_time_diff(timestamp(),
 				philosophers[amount].last_meal_time);
 		if (time_diff > philosophers->infos->time_to_die
 			&& philosophers[amount].state != EATING
 			&& philosophers[amount].last_meal_time.tv_sec > 0)
-			return (philosophers + amount);
+			return (MTX_UNLOCK(philosophers->philos_mtx + amount),
+				philosophers + amount);
+		MTX_UNLOCK(philosophers->philos_mtx + amount);
 	}
 	return (NULL);
 }
@@ -36,8 +39,13 @@ static int	do_philos_ate_enough(t_philo *philo)
 	if (philo->infos->must_eat_times == 0)
 		return (FALSE);
 	while (++i < philo->infos->philo_amt)
+	{
+		MTX_LOCK(philo->philos_mtx + i);
 		if (philo[i].times_eaten < philo->infos->must_eat_times)
-			return (FALSE);
+			return (MTX_UNLOCK(philo->philos_mtx + i),
+				FALSE);
+		MTX_UNLOCK(philo->philos_mtx + i);
+	}
 	return (TRUE);
 }
 
