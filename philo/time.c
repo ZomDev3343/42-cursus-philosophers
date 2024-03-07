@@ -6,7 +6,7 @@
 /*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 16:38:32 by truello           #+#    #+#             */
-/*   Updated: 2024/03/05 16:23:32 by truello          ###   ########.fr       */
+/*   Updated: 2024/03/07 14:42:06 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ struct timeval	timestamp(void)
 	return (tval);
 }
 
+/**
+ * @brief Get the duration (in ms) between two moments
+ *
+ * @param from Most recent moment
+ * @param to Less recent moment
+ * @return int Duration in ms
+ */
 int	get_time_diff(struct timeval from, struct timeval to)
 {
 	long long	diff;
