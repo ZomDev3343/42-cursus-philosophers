@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tohma <tohma@student.42.fr>                +#+  +:+       +#+        */
+/*   By: truello <truello@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:27:08 by truello           #+#    #+#             */
-/*   Updated: 2024/03/07 14:16:51 by tohma            ###   ########.fr       */
+/*   Updated: 2024/03/07 14:47:15 by truello          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	check_args(int ac, char **av)
 	while (++i < ac)
 	{
 		n = ft_atoi(av[i]);
-		if (!ft_strcmp(av[i], "0") && n == 0)
+		if (n <= 0)
 			return (FALSE);
 	}
 	return (TRUE);
@@ -85,7 +85,9 @@ static void	start_philo(int ac, char **av)
 	int		i;
 
 	i = -1;
-	if (!check_args(ac, av) || !setup_vars(&vars, ac, av))
+	if (!check_args(ac, av))
+		return (printf("Wrong parameters!\n"), (void) 0);
+	if (!setup_vars(&vars, ac, av))
 		return (printf("Initialization error!\n"), (void) 0);
 	init_vars(vars);
 	while (++i < vars->infos->philo_amt + 1)
