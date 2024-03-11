@@ -7,7 +7,7 @@ SRC=./philo/main.c \
 OBJ=${SRC:.c=.o}
 NAME=philosopher
 BONUS_NAME=philosopher_bonus
-FLAGS=-Wall -Werror -Wextra
+FLAGS=-Wall -Werror -Wextra -pthread
 
 all: $(NAME)
 
